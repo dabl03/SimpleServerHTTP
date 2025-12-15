@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<extradoc>
+    <class name="UrlInfo">
+        <codeMain>
+        	<code>
+	            class SetUrls:UrlController{
+					public SetUrls():base(){}
+					[UrlInfo("/")]
+					public string MainUrl(){
+						return getRootHtml();
+					}
+					[UrlInfo("/register",new Dictionary<string,object>{
+						{"Method","Get"},// Default value.
+						{"Content-Type","text/html; charset=utf-8"}
+					})]
+					public string registerUser(string name,string value){
+						return (registerUser(name,value))?"<h1>Ok</h1>":"<h1>Error</h1>";
+					}
+				}
+			</code>
+        </codeMain>
+    </class>
+</extradoc>
