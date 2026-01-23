@@ -2,14 +2,18 @@ using System;
 using System.Net;
 using System.IO;
 using System.Collections.Generic;
-//Substring
-/// <TODO>Hacer algunas opciones cli.</TODO>
+
 class HttpServer
 {
 	static void Main(string[] args){
-		string path="http://localhost:8090/";
-		HttpListener listener = new HttpListener();
-		SetUrls urlController=new SetUrls();
+		ExampleClass.runServer("http://localhost:8090/");
+	}
+}
+class ExampleClass:UrlController{
+	public ExampleClass():base(){}
+	static public void runServer(string path){
+		var listener = new HttpListener();
+		var urlController=new ExampleClass();
 
 		listener.Prefixes.Add(path);
 		listener.Start();
@@ -27,9 +31,6 @@ class HttpServer
 			urlController.context.Response.Close();
 		}
 	}
-}
-class SetUrls:UrlController{
-	public SetUrls():base(){}
 	[UrlInfo("/",@"{""Method"":""post""}")]
 	public string RootPath(string a){
 		return $"<h1> Roooot {a} path</h1>";
@@ -46,4 +47,5 @@ class SetUrls:UrlController{
 	public string ComoPath(){
 		return "<h1>Yo bueeeeen</h1>";
 	}
+
 }

@@ -3,6 +3,8 @@ using System.IO;
 class StaticFile{
 	public const string path404codes="codes/404.html";
 	/// <summary>Lee un archivo y retorna su contenido como string.</summary>
+	/// <param name="url">El archivo buscar.</param>
+	/// <return>El contenido del archivo o el contenido del archivo path404codes.</return>
 	public static string GetString(string url){
 		try{
 			return File.ReadAllText($"./static/{url}");
