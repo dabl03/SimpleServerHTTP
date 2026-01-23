@@ -5,20 +5,22 @@
         	<code>
 	            class SetUrls:UrlController{
 					public SetUrls():base(){}
+					// Create the root url (https://you path/)
 					[UrlInfo("/")]
 					public string MainUrl(){
 						return getRootHtml();
 					}
-					[UrlInfo("/como.html",@"{
-						'Method':'Get',
-						'Content-Type':'text/html; charset=utf-8'
-					}")]
-					public string registerUser(string name,string value){
+					// Special keys like Method must be in CamelCase
+					[UrlInfo("/register_user/",@"{
+							'Method':'Get',
+							'Content-Type':'text/html; charset=utf-8'
+						}")
+					]
+					public string UrlRegisterUser(string name,string value){
 						return (registerUser(name,value))?"<h1>Ok</h1>":"<h1>Error</h1>";
 					}
 				}
 			</code>
         </codeMain>
     </class>
-
 </extradoc>

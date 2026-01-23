@@ -1,9 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<!--TODO: Agregar versiones al archivos de release.-->
+	<PropertyGroup>
+		<!--Path de salida-->
+		<OutputPath>./bin</OutputPath>
+		<!--BaseIntermediateOutputPath>./bin/obj</BaseIntermediateOutputPath> <!- No cambia la ubicacion del directorio obj al 100%, recordar excluir.-->
+		<Nullable>enable</Nullable>
+		<OutputType>Exe</OutputType>
+		<!--<SelfContained>true</SelfContained> <!-Es independiente de dotnet, el problema es que es mas lento.
+		Usar en su lugar: https://learn.microsoft.com/es-es/dotnet/core/tools/dotnet-build-->
+		<ImplicitUsings>enable</ImplicitUsings> <!--Busca automaticamente sin usar using.-->
+		<TargetFramework>net8.0</TargetFramework>
+		<PublishSingleFile>true</PublishSingleFile> <!--Archivo unico-->
+		<PlatformTarget>anycpu</PlatformTarget>
+		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
+	</PropertyGroup>
+	<ItemGroup>
+		<CSFile Include="$(MSBuildProjectDirectory)/*.cs" />
+	</ItemGroup>
+	<ItemGroup><!--Get  Sqlite-->
+	  <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.1" />
+	</ItemGroup>
+	<Target Name="Compile">
+		<CSC Sources="@(CSFile)" OutputAssembly="$(MSBuildProjectName).exe" StartupObject="$(MSBuildProjectDirectory)/Program.cs">
+			<Output TaskParameter="OutputAssembly" ItemName="EXEFile" />
+		</CSC>
+		<!-- Log the file name of the output file -->
+		<Message Text="The output file is @(EXEFile)" />
+	</Target>
 </Project>
