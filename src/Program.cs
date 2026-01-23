@@ -31,21 +31,35 @@ class ExampleClass:UrlController{
 			urlController.context.Response.Close();
 		}
 	}
-	[UrlInfo("/",@"{""Method"":""post""}")]
-	public string RootPath(string a){
-		return $"<h1> Roooot {a} path</h1>";
+	[UrlInfo("/")]
+	public string RootPath(){
+		return @"
+<html>
+<head>
+	<title>SimpleServerHTTP</title>
+</head>
+<body>
+	<h1>Bienvenido al SimpleServerHTTP</h1>
+	<p>Las urls disponibles son:</p>
+	<ul>
+		<li><a href=""/hello/world"">Hola mundo</a></li>
+		<li><a href=""/favicon.ico"">Icono de la página</a></li>
+	</ul>
+</body>
+</html>
+";
 	}
 	[UrlInfo("/favicon.ico",@"{""content-type"":""image/png""}")]
 	public byte[] Favicon(string a){
 		return StaticFile.GetImage("./static/media/favicon.png");
 	}
 	/// <Remark>Al borrar esto Ver la funcion MakeHeader</Remark>
-	[UrlInfo("/como/",@"{
+	[UrlInfo("/hello/world",@"{
 			""Method"":""Get"",
 			""Content-Type"":""text/html; charset=utf-8""
 		}")]
-	public string ComoPath(){
-		return "<h1>Yo bueeeeen</h1>";
+	public string HelloWorld(string msg){
+		return $"<h1>Hola mundo</h1>y<h1>Hola {msg}</h1>";
 	}
 
 }
