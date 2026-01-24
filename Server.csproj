@@ -13,9 +13,6 @@
 	<ItemGroup>
 		<CSFile Include="$(MSBuildProjectDirectory)/*.cs" />
 	</ItemGroup>
-	<ItemGroup><!--Get  Sqlite-->
-	  <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.1" />
-	</ItemGroup>
 	<Target Name="Compile">
 		<CSC Sources="@(CSFile)" OutputAssembly="$(MSBuildProjectName).exe" StartupObject="$(MSBuildProjectDirectory)/Program.cs">
 			<Output TaskParameter="OutputAssembly" ItemName="EXEFile" />
