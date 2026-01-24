@@ -1,16 +1,17 @@
 # Simple Server for HTTP
 
-Este proyecto fue creado para facilitar la elaboración rápida de un servidor en local.
+This project was created to facilitate the rapid development of a local server.
 
-## Requisito
-- dotnet: Este proyecto se compila usando la versión 8.0.401 de dotnet.
+## Requirement
+- dotnet: This project is compiled using dotnet version 8.0.401.
 
-## Compilación y Ejecución
-Solo se necesitan <code>dotnet build</code> y <code>dotnet run</code> para ejecutar el ejemplo.
+## Compilation and Execution
+Only <code>dotnet build</code> and <code>dotnet run</code> are needed to run the example.
 
-## Empezar a desarrollar
-La forma de crear una url se basa en flask de python por su facilidad, pero las configuraciones son diferentes:
+## Getting Started
+The way to create a URL is based on Python's Flask because of its ease, but the configurations are different:
 ```
+using System.Net;
 // The "UrlController" class is responsible for finding the requested URLs and calling the corresponding function, and for handling the headers.
 class ExampleClass: UrlController{
 	public ExampleClass():base(){}
@@ -39,30 +40,46 @@ class ExampleClass: UrlController{
 	<title>SimpleServerHTTP</title>
 </head>
 <body>
-	<h1>Bienvenido al SimpleServerHTTP</h1>
-	<p>Las urls disponibles son:</p>
+	<h1>Welcome to SimpleServerHTTP</h1>
+	<p>The available URLs are:</p>
 	<ul>
-		<li><a href=""/hello/world"">Hola mundo</a></li>
-		<li><a href=""/favicon.ico"">Icono de la página</a></li>
+		<li><a href=""/hello/world"">Hello World</a></li>
+		<li><a href=""/favicon.ico"">Page icon</a></li>
 	</ul>
 </body>
 </html>
 ";
 	}
+	public void run(){
+		var listener = new HttpListener();
+		string path = "http://localhost:8090/";
+		listener.Prefixes.Add(path);
+		listener.Start();
+		Console.WriteLine($"Listening on '{path}'...");
+		while (true){
+			this.ProcessEventUrl(listener.GetContext());
+			this.context.Response.Close();
+		}
+	}
 }
 ```
-Como se muestra en el código podemos analizar lo siguiente:
-- Todas las funciones con atributos UrlInfo serán llamadas por las url correspondientes.
-- Por ahora solo se permiten dos tipos de retornos: byte[] y string, esto porque al final la respuesta se envía en byte[], y el string se convierte en byte[].
-- Las configuraciones del header por ahora son solo en string con formato JSON, y son parámetros opcionales.
-- Los parámetros de las funciones se toman de la url, si no se consiguen entonces se pasa "" .
-- El retorno será la respuesta al cliente.
+As shown in the code, we can analyze the following:
 
-## todo
-[-] Mejorar la documentación y buscar la manera de generarla automáticamente.
-[-] Mejorar el ejemplo para que enseñe esta documentación.
-[-] Traducir todo al ingles.
-[-] Crear un sistema de plantilla.
-[-] Facilitar la respuesta html haciendo que automáticamente se cree el header.
-[-] Arreglar bug de la codificacion en la respuesta 404
-[-] El servidor se sigue ejecutando en MobaXterm al precionar ctrl+c
+- All functions with UrlInfo attributes will be called by their corresponding URLs.
+
+- To process the client's request, you must call <code>ProcessEventUrl</code>. This is done this way to give you, the developer, more freedom.
+
+- For now, only two return types are allowed: byte[] and string. This is because the response is ultimately sent as byte[], and the string is converted to byte[].
+
+- Header configurations are currently only available in JSON-formatted strings and are optional parameters.
+
+- Function parameters are taken from the URL. If they are not available, then "" is passed.
+
+- The return value will be the response to the client.
+
+## To do:
+[ ] Improve the documentation and find a way to generate it automatically.<br/>
+[ ] Improve the example to demonstrate this documentation.<br/>
+[ ] Create a template system.<br/>
+[ ] Simplify the HTML response by automatically creating the header.<br/>
+[ ] The server continues running in MobaXterm when pressing Ctrl+C.

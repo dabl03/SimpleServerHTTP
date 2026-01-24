@@ -1,27 +1,27 @@
 <?xml version="1.0"?>
 <extradoc>
-    <class name="UrlInfo">
-        <codeMain>
-        	<code>
-	            class ExampleClass:UrlController{
-					public ExampleClass():base(){}
-					// Create the root url (https://you path/)
-					[UrlInfo("/")]
-					public string MainUrl(){
-						return getRootHtml();
-					}
-					// Special keys like Method must be in CamelCase
-					// /register_user/?name=user&value=password
-					[UrlInfo("/register_user/",@"{
-							'Method':'Get',
-							'Content-Type':'text/html; charset=utf-8'
-						}")
-					]
-					public string UrlRegisterUser(string name,string password){
-						return (registerUser(name,value))?"<h1>Ok</h1>":"<h1>Error</h1>";
-					}
+	<class name="UrlInfo">
+		<codeMain>
+		<code>
+			class ExampleClass:UrlController{
+				public ExampleClass():base(){}
+				// Create the root url (https://you path/)
+				[UrlInfo("/")]
+				public string MainUrl(){
+					return getRootHtml();
 				}
-			</code>
-        </codeMain>
-    </class>
+				// Special keys like Method must be in CamelCase
+				// /register_user/?name=user&value=password
+				[UrlInfo("/register_user/",@"{
+						'Method':'Get',
+						'Content-Type':'text/html; charset=utf-8'
+					}")
+				]
+				public string UrlRegisterUser(string name,string password){
+					return (registerUser(name,value))?"<h1>Ok</h1>":"<h1>Error</h1>";
+				}
+			}
+		</code>
+		</codeMain>
+	</class>
 </extradoc>

@@ -2,7 +2,6 @@ using System;
 using System.Net;
 using System.IO;
 using System.Collections.Generic;
-
 class HttpServer
 {
 	static void Main(string[] args){
@@ -13,23 +12,33 @@ class ExampleClass:UrlController{
 	public ExampleClass():base(){}
 	static public void runServer(string path){
 		var listener = new HttpListener();
-		var urlController=new ExampleClass();
-
+		var server=new ExampleClass();
+		var msg_end=@"         Server is down.
+Thank you for trying SimpleServerHTTP.";
+		Console.CancelKeyPress += (object sender, ConsoleCancelEventArgs e)=>{
+			Console.WriteLine(msg_end);
+			if (server.context!=null)
+				server.context.Response.Close();
+			e.Cancel=true;
+			Environment.Exit(0);
+		};
 		listener.Prefixes.Add(path);
 		listener.Start();
 		Console.WriteLine($"Listening on '{path}'...");
+		Console.WriteLine($"Ctlr+C for finish.");
 		while (true){
-			urlController.context = listener.GetContext();
 			#if DEBUG
 				String hourMinute = DateTime.Now.ToString("HH:mm:ss.fff");
 			#endif
-			urlController.ProcessEventUrl();
+			server.ProcessEventUrl(listener.GetContext());
 			#if DEBUG
-				Console.Write($"- {hourMinute} - '{urlController.context.Request.Url.AbsolutePath}' -> ");
-				Console.Write($" {DateTime.Now.ToString("HH:mm:ss.fff")} - 'HTTP {urlController.context.Response.StatusCode}'\n");
+				Console.Write($"- {hourMinute} - '{server.context.Request.Url.AbsolutePath}' -> ");
+				Console.Write($" {DateTime.Now.ToString("HH:mm:ss.fff")} - 'HTTP {server.context.Response.StatusCode}'\n");
 			#endif
-			urlController.context.Response.Close();
+			server.context.Response.Close();
+			server.context=null;
 		}
+		Console.WriteLine(msg_end);
 	}
 	[UrlInfo("/")]
 	public string RootPath(){
