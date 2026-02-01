@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Collections.Generic;
 using System.IO;
+
+namespace SimpleServerHTTP;
 /// <sumary>
 /// The <c>UrlInfo</c> class is used
 /// to define the necessary information
@@ -12,10 +14,10 @@ using System.IO;
 /// class can listen for a new URL.
 /// </sumary>
 /// <example>
-///		<include file="./doc/example/UrlController.xml" path='extradoc/class[@name="UrlInfo"]/codeMain*' />
+///		<include file="./doc/example/UrlController.xml" path='doc/class[@name="UrlInfo"]/codeMain' />
 /// </example>
 [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
-class UrlInfo: Attribute {
+public class UrlInfo: Attribute {
 	public UrlInfo(string urlName):this(urlName,null){}
 	public UrlInfo(string urlName, string? headerJson){
 		UrlName=urlName;
@@ -26,28 +28,35 @@ class UrlInfo: Attribute {
 	protected string urlName="";// To disable the null warning.
 	public string UrlName{
 		get {return urlName;}
+		/// <exception cref="ArgumentException">The URL is invalid.</exception>
 		set {
-			if (value==null)
-				throw new ArgumentException("The URL cannot be a null value.",nameof(value));
-			Uri? uriResult;
-			bool result = Uri.TryCreate(value, UriKind.Absolute, out uriResult) // UriKind.Relative no found
-				&& (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)
-			;
-			if (result)
+			if (!VerifyUrl(value))
 				throw new ArgumentException("The URL is invalid", nameof(value));
 			this.urlName=value;
 		}
 	}
 	public Dictionary<string,string> header;
+	/// <summary>
+	///    Verify that it is a valid URL.
+	/// </summary>
+	/// <return> Is valid?</return>
+	static public bool VerifyUrl(string url){
+		if (url==null)
+			return false;
+		Uri? uriResult;
+		bool result = Uri.TryCreate(url, UriKind.Absolute, out uriResult) // UriKind.Relative no found
+			&& (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)
+		;
+		return !result;
+	}
 }
 /// <summary>
 /// Class <c>UrlController</c> It helps with server response
 /// and facilitates listening for events related to requests.
 /// </summary>
-class UrlController{
+public class UrlController{
 	// It should not contain null values, but I don't want to see this warning.
 	public HttpListenerContext? context;// <<It is altered by ProcessEventUrl
-	protected const string path404codes="codes/404.html";
 	/// <summary>
 	/// According to the request within the variable <c>UrlController.context</c>,
 	/// Search within the instances of this class for a function that
@@ -238,7 +247,7 @@ class UrlController{
 	public string PageNotFound(){
 		if (context!=null)
 			context.Response.StatusCode = 404;
-		return StaticFile.GetString(StaticFile.path404codes);
+		return StaticFile.GetString(StaticFile.Path404Codes);
 	}
 	/// <summary>
 	/// To inform about what type of parameter should be used.

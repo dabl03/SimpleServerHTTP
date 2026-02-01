@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<extradoc>
+<doc>
 	<class name="UrlInfo">
 		<codeMain>
 		<code>
@@ -11,17 +11,17 @@
 					return getRootHtml();
 				}
 				// Special keys like Method must be in CamelCase
-				// /register_user/?name=user&value=password
+				// /register_user/?name=user&amp;value=password
 				[UrlInfo("/register_user/",@"{
 						'Method':'Get',
 						'Content-Type':'text/html; charset=utf-8'
 					}")
 				]
 				public string UrlRegisterUser(string name,string password){
-					return (registerUser(name,value))?"<h1>Ok</h1>":"<h1>Error</h1>";
+					return (registerUser(name,value))?"&lt;h1>Ok&lt;/h1&gt;":"&lt;h1&gt;Error&lt;/h1&gt;";
 				}
 			}
 		</code>
 		</codeMain>
 	</class>
-</extradoc>
+</doc>

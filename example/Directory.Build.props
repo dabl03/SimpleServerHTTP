@@ -1,0 +1,6 @@
+<Project>
+	<PropertyGroup>
+		<!--Si se quita, genera problemas.-->
+		<BaseIntermediateOutputPath>../bin/obj</BaseIntermediateOutputPath>
+	</PropertyGroup>
+</Project>
