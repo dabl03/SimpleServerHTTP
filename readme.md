@@ -12,6 +12,7 @@ Only <code>dotnet build</code> and <code>dotnet run</code> are needed to run the
 The way to create a URL is based on Python's Flask because of its ease, but the configurations are different:
 ```
 using System.Net;
+using SimpleServerHTTP;
 // The "UrlController" class is responsible for finding the requested URLs and calling the corresponding function, and for handling the headers.
 class ExampleClass: UrlController{
 	public ExampleClass():base(){}
@@ -51,6 +52,7 @@ class ExampleClass: UrlController{
 ";
 	}
 	public void run(){
+		StaticFile.RootPath="YOU_PATH/FILES/AND_IMAGE/";
 		var listener = new HttpListener();
 		string path = "http://localhost:8090/";
 		listener.Prefixes.Add(path);
@@ -77,9 +79,5 @@ As shown in the code, we can analyze the following:
 
 - The return value will be the response to the client.
 
-## To do:
-[ ] Improve the documentation and find a way to generate it automatically.<br/>
-[ ] Improve the example to demonstrate this documentation.<br/>
-[ ] Create a template system.<br/>
-[ ] Simplify the HTML response by automatically creating the header.<br/>
-[ ] The server continues running in MobaXterm when pressing Ctrl+C.
+## Dependencies:
+- Scriban 6.5.2: To provide templates.

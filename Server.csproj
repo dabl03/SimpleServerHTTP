@@ -3,21 +3,35 @@
 		<!--Path de salida-->
 		<OutputPath>./bin</OutputPath>
 		<Nullable>enable</Nullable>
-		<OutputType>Exe</OutputType>
+		<OutputType>Library</OutputType>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<TargetFramework>net8.0</TargetFramework>
 		<PublishSingleFile>true</PublishSingleFile>
 		<PlatformTarget>anycpu</PlatformTarget>
 		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
+		<!--Program info.-->
+		<PackageId>SimpleServerHTTP</PackageId>
+		<Authors>dabl03</Authors>
+		<DocumentationFile>./doc/$(MSBuildProjectName).xml</DocumentationFile>
 	</PropertyGroup>
 	<ItemGroup>
-		<CSFile Include="$(MSBuildProjectDirectory)/*.cs" />
+		<CSFile Include="./src/*.cs" />
+		<Compile Remove="example/*" />
+	</ItemGroup>
+	<ItemGroup>   
+		<ExcludeFromPackageFolders Include="example/*">
+			<FromTarget>[Problema por duplicacion de metadatos.]</FromTarget>
+		</ExcludeFromPackageFolders>
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="Scriban" Version="6.5.2" />
 	</ItemGroup>
 	<Target Name="Compile">
-		<CSC Sources="@(CSFile)" OutputAssembly="$(MSBuildProjectName).exe" StartupObject="$(MSBuildProjectDirectory)/Program.cs">
-			<Output TaskParameter="OutputAssembly" ItemName="EXEFile" />
+		<CSC Sources="@(CSFile)" OutputAssembly="$(MSBuildProjectName)" DebugType="pdbonly" CheckForOverflowUnderflow="true">
 		</CSC>
-		<!-- Log the file name of the output file -->
-		<Message Text="The output file is @(EXEFile)" />
+	</Target>
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Copy SourceFiles="$(OutputPath)/$(MSBuildProjectName).dll" DestinationFolder="$(ProjectDir)" />
+		<Exec Command="echo The library has been compiled with the name '$(MSBuildProjectName)'" />
 	</Target>
 </Project>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<title>Ejemplo Básico</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="/Basic.css"/>
+</head>
+<body>
+	{{header}}
+	<main>
+		<h3>¿Porque hacer <code>SimpleServerHTTP</code>?</h3>
+		<p>Como proyecto para portafolio, quise hacer una aplicación que emulara un banco. Entonces buscando API para actuar como servidor conseguí varias, pero, no son soportada por la pc que uso, asi que diseñe una basada en flask.</p>
+		<h3>¿Como usar la biblioteca <code>SimpleServerHTTP</code>?</h3>
+		<p>Para usar la biblioteca solo hay que heredad la clase <code>UrlController</code> y definir las funciones que envia la respuesta al cliente con el atributo <code>UrlInfo("/Basi.html")</code>. Tambien implementar una función para escuchar las peticiones.</p>
+		<h3>Alguna URL de ejemplos:</h3>
+		<ul>
+			{{~ for example in examples ~}}
+			<li><a href="{{example.url}}">{{example.title}}</a></li>
+			{{~ end ~}}
+		</ul>
+	</main>
+	{{footer}}
+</body>
+</html>

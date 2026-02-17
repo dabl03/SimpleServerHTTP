@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Server</name>
+    </assembly>
+    <members>
+        <member name="T:SimpleServerHTTP.StaticFile">
+            <sumary>
+            This class is designed to read and return
+            the contents of the file if it is found;
+            otherwise, the corresponding error file is returned.
+            </sumary>
+        </member>
+        <member name="F:SimpleServerHTTP.StaticFile.Path404Codes">
+            Root folder where files are searched.
+        </member>
+        <member name="F:SimpleServerHTTP.StaticFile.Path404CodesImage">
+            Where to find the 404 error page
+        </member>
+        <member name="M:SimpleServerHTTP.StaticFile.GetString(System.String)">
+            Where to find the 404 error image
+            <summary>
+            Read a file and return its contents as a string.
+            </summary>
+            <param name="url">The file search.</param>
+            <return>
+            The contents of the file or the contents
+            of the file RootPath/Path404Codes.
+            </return>
+        </member>
+        <member name="M:SimpleServerHTTP.StaticFile.GetImage(System.String)">
+            <summary>Returns an image file as a byte array</summary>
+            <param name="url">The image for search.</param>
+            <return>The image or the file Path404CodesImage</return>
+        </member>
+        <member name="M:SimpleServerHTTP.StaticFile.GetBinary(System.String)">
+            <summary>Reads and returns a binary file.</summary>
+            <param name="url">The file search.</param>
+            <return>
+            The contents of the file or the contents or
+             null if it doesn't exist.
+            </return>
+            <exception cref="T:System.ArgumentException">The URL is invalid.</exception>
+        </member>
+        <member name="T:SimpleServerHTTP.UrlInfo">
+            <sumary>
+            The <c>UrlInfo</c> class is used
+            to define the necessary information
+            So that the children of the <c>UrlController</c>
+            class can listen for a new URL.
+            </sumary>
+            <example>
+            	<codeMain>
+		<code>
+			class ExampleClass:UrlController{
+				public ExampleClass():base(){}
+				// Create the root url (https://you path/)
+				[UrlInfo("/")]
+				public string MainUrl(){
+					return getRootHtml();
+				}
+				// Special keys like Method must be in CamelCase
+				// /register_user/?name=user&amp;value=password
+				[UrlInfo("/register_user/",@"{
+						'Method':'Get',
+						'Content-Type':'text/html; charset=utf-8'
+					}")
+				]
+				public string UrlRegisterUser(string name,string password){
+					return (registerUser(name,value))?"&lt;h1&gt;Ok&lt;/h1&gt;":"&lt;h1&gt;Error&lt;/h1&gt;";
+				}
+			}
+		</code>
+		</codeMain>
+            </example>
+        </member>
+        <member name="M:SimpleServerHTTP.UrlInfo.VerifyUrl(System.String)">
+            <summary>
+               Verify that it is a valid URL.
+            </summary>
+            <return> Is valid?</return>
+        </member>
+        <member name="T:SimpleServerHTTP.UrlController">
+            <summary>
+            Class <c>UrlController</c> It helps with server response
+            and facilitates listening for events related to requests.
+            </summary>
+        </member>
+        <member name="M:SimpleServerHTTP.UrlController.ProcessEventUrl(System.Net.HttpListenerContext)">
+            <summary>
+            According to the request within the variable <c>UrlController.context</c>,
+            Search within the instances of this class for a function that
+            has the attribute <c>UrlInfo</c> and the requested URL is
+            the same as <c>UrlInfo.UrlName</c> If it finds one, it calls
+            that function and gives a response to the client.
+            </summary>
+        </member>
+        <member name="M:SimpleServerHTTP.UrlController.Send(System.Reflection.MethodInfo,SimpleServerHTTP.UrlInfo)">
+            <summary>
+            Method <c>Send</c> Sets the body
+            and header of the HTTP response.
+            </summary>
+            <param name="func">
+            It executes the function and obtains the
+            response from the requested URL.
+            </param>
+            <param name="attr">
+            Information needed to create and obtain the header 
+            information defined by the function.
+            </param>
+            <exception cref="T:System.OperationCanceledException">
+            The return type of the function to respond
+            to the client has not been addressed.
+            </exception>
+            <exception cref="T:System.NullReferenceException">
+            The function to respond to the client is return null.
+            </exception>
+        </member>
+        <member name="M:SimpleServerHTTP.UrlController.MakeHeader(System.Net.HttpListenerContext,SimpleServerHTTP.UrlInfo)">
+            <summary>
+            Modify the header of the response to the customer.
+            </summary>
+            <param name="context">
+            It is used to modify the response header.
+            </param>
+            <param name="attr">
+            It obtains the information to modify the header.
+            </param>
+        </member>
+        <member name="M:SimpleServerHTTP.UrlController.GetMethodParam(System.Net.HttpListenerContext,System.Reflection.MethodInfo)">
+            <summary>
+            It obtains the parameters for the function
+            from the client's GET request.
+            </summary>
+            <param name="context">
+            Get the keys and values ​​passed by the URL.
+            </param>
+            <param name="func">
+            It obtains the necessary information to order,
+            view, and know about the attributes of the function.
+            </param>
+            <returns>
+            The values ​​used to pass as a parameter to
+            the function.
+            </returns>
+            <exception cref="M:SimpleServerHTTP.UrlController.ArgumentException(System.Reflection.ParameterInfo,System.Reflection.MethodInfo)">
+            	<see cref="M:SimpleServerHTTP.UrlController.ArgumentException(System.Reflection.ParameterInfo,System.Reflection.MethodInfo)"/>
+            </exception>
+        </member>
+        <member name="M:SimpleServerHTTP.UrlController.PostMethodParam(System.Net.HttpListenerContext,System.Reflection.MethodInfo)">
+            <summary>
+            It obtains the parameters for the function
+            from the client's POST request.
+            </summary>
+            <param name="context">
+            Get the keys and values ​​passed by the URL.
+            </param>
+            <param name="func">
+            It obtains the necessary information to order,
+            view, and know about the attributes of the function.
+            </param>
+            <returns>
+            The values ​​used to pass as a parameter to
+            the function.
+            </returns>
+            <exception cref="M:SimpleServerHTTP.UrlController.ArgumentException(System.Reflection.ParameterInfo,System.Reflection.MethodInfo)">
+            	<see cref="M:SimpleServerHTTP.UrlController.ArgumentException(System.Reflection.ParameterInfo,System.Reflection.MethodInfo)"/>
+            </exception>
+        </member>
+        <member name="M:SimpleServerHTTP.UrlController.PageNotFound">
+            <summary>
+            Returns the file dedicated to 404 responses.
+            </summary>
+            <returns>Response http 404</returns>
+        </member>
+        <member name="M:SimpleServerHTTP.UrlController.ArgumentException(System.Reflection.ParameterInfo,System.Reflection.MethodInfo)">
+            <summary>
+            To inform about what type of parameter should be used.
+            </summary>
+            <param name="pars">
+            Information about the invalid parameter name and type.
+            </param>
+            <param name="func">
+            Information about the class name and function.
+            </param>
+            <exception cref="M:SimpleServerHTTP.UrlController.ArgumentException(System.Reflection.ParameterInfo,System.Reflection.MethodInfo)">
+            All parameters of functions with the UrlInfo 
+            attribute must be string
+            </exception>
+        </member>
+    </members>
+</doc>
